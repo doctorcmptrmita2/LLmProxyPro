@@ -1,0 +1,141 @@
+# LiteLLM Production Configuration for CodexFlow.dev
+# Optimized for OVH KS-4 server with EasyPanel
+
+model_list:
+  # ============================================
+  # FAST POOL: Claude Haiku 4.5 (3 API Keys)
+  # ============================================
+  - model_name: fast
+    litellm_params:
+      model: anthropic/claude-haiku-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY_1
+      rpm: 40
+      tpm: 100000
+      timeout: 120
+    model_info:
+      id: fast-haiku-1
+      mode: chat
+      supports_function_calling: true
+      supports_vision: false
+      max_tokens: 200000
+
+  - model_name: fast
+    litellm_params:
+      model: anthropic/claude-haiku-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY_2
+      rpm: 40
+      tpm: 100000
+      timeout: 120
+    model_info:
+      id: fast-haiku-2
+      mode: chat
+      supports_function_calling: true
+      supports_vision: false
+      max_tokens: 200000
+
+  - model_name: fast
+    litellm_params:
+      model: anthropic/claude-haiku-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY_3
+      rpm: 40
+      tpm: 100000
+      timeout: 120
+    model_info:
+      id: fast-haiku-3
+      mode: chat
+      supports_function_calling: true
+      supports_vision: false
+      max_tokens: 200000
+
+  # ============================================
+  # DEEP POOL: Claude Sonnet 4.5 (3 API Keys)
+  # ============================================
+  - model_name: deep
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY_1
+      rpm: 20
+      tpm: 80000
+      timeout: 180
+    model_info:
+      id: deep-sonnet-1
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+      max_tokens: 200000
+
+  - model_name: deep
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY_2
+      rpm: 20
+      tpm: 80000
+      timeout: 180
+    model_info:
+      id: deep-sonnet-2
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+      max_tokens: 200000
+
+  - model_name: deep
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY_3
+      rpm: 20
+      tpm: 80000
+      timeout: 180
+    model_info:
+      id: deep-sonnet-3
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+      max_tokens: 200000
+
+# Router settings
+router_settings:
+  routing_strategy: simple-shuffle
+  model_group_alias:
+    fast: fast
+    deep: deep
+  num_retries: 2
+  timeout: 120
+  fallbacks: []
+  redis_host: redis
+  redis_port: 6379
+  redis_password: ${REDIS_PASSWORD}
+
+# General settings
+general_settings:
+  master_key: ${LITELLM_API_KEY}
+  database_url: null
+  store_model_in_db: false
+  
+# Logging and monitoring
+litellm_settings:
+  success_callback: []
+  failure_callback: []
+  service_callback: []
+  cache: false  # Laravel handles caching
+  cache_params:
+    type: null
+  set_verbose: false
+  json_logs: true
+  log_raw_request_response: false
+
+# Health check settings
+health_check:
+  enabled: true
+  endpoint: "/health"
+
+# Rate limiting
+rate_limit:
+  enabled: true
+  redis_host: redis
+  redis_port: 6379
+  redis_password: ${REDIS_PASSWORD}
+
+# Security
+security:
+  cors_origins: ["https://api.codexflow.dev"]
+  allowed_ips: []  # Empty means all IPs allowed
