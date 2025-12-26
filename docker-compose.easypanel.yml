@@ -1,14 +1,11 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: codexflow-app
     restart: unless-stopped
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     environment:
       - APP_NAME=CodexFlow
       - APP_ENV=production
@@ -58,7 +55,6 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: codexflow-db
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE=${DB_DATABASE:-codexflow}
@@ -69,8 +65,8 @@ services:
       - db_data:/var/lib/mysql
       - ./docker/mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     networks:
       - codexflow
     healthcheck:
@@ -83,7 +79,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: codexflow-redis
     restart: unless-stopped
     command: >
       redis-server
@@ -93,8 +88,8 @@ services:
       --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
     networks:
       - codexflow
     healthcheck:
@@ -106,7 +101,6 @@ services:
 
   litellm:
     image: ghcr.io/berriai/litellm:main-latest
-    container_name: codexflow-litellm
     restart: unless-stopped
     environment:
       - ANTHROPIC_API_KEY_1=${ANTHROPIC_KEY_1}
@@ -114,8 +108,8 @@ services:
       - ANTHROPIC_API_KEY_3=${ANTHROPIC_KEY_3}
     volumes:
       - ./litellm-config.yaml:/app/config.yaml:ro
-    ports:
-      - "4000:4000"
+    expose:
+      - "4000"
     networks:
       - codexflow
     command: ["--config", "/app/config.yaml", "--port", "4000"]

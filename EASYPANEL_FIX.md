@@ -13,6 +13,13 @@ EasyPanel, Dockerfile'ı docker-compose dosyası gibi okumaya çalışıyor. Bu 
 
 ## ✅ Çözüm 1: Docker Compose Build Type Kullan (Önerilen)
 
+### ⚠️ Önemli Notlar
+
+`docker-compose.easypanel.yml` dosyası EasyPanel için optimize edilmiştir:
+- ✅ `version` satırı kaldırıldı (obsolete)
+- ✅ `container_name` kaldırıldı (EasyPanel otomatik yönetiyor)
+- ✅ `ports` yerine `expose` kullanıldı (port mapping EasyPanel UI'dan yapılıyor)
+
 ### Adımlar:
 
 1. **EasyPanel'de projeye git**
@@ -22,6 +29,14 @@ EasyPanel, Dockerfile'ı docker-compose dosyası gibi okumaya çalışıyor. Bu 
    - Build Type: **"Docker Compose"** seç
    - Docker Compose File: `docker-compose.easypanel.yml`
    - Build Context: `/`
+
+3. **Port Mapping (EasyPanel UI'dan)**
+   - **app** servisi için: Container Port `80` → Host Port `80` (veya istediğiniz port)
+   - **db** servisi için: Container Port `3306` → Host Port `3306` (opsiyonel, sadece dış erişim için)
+   - **redis** servisi için: Container Port `6379` → Host Port `6379` (opsiyonel, sadece dış erişim için)
+   - **litellm** servisi için: Container Port `4000` → Host Port `4000` (opsiyonel, sadece dış erişim için)
+   
+   **Not**: `app` servisi dışındaki portlar genellikle sadece internal network'te kullanılır, dışarıya açmaya gerek yok.
 
 3. **Environment Variables ekle** (Environment sekmesi):
    ```
