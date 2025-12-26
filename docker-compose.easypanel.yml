@@ -106,6 +106,9 @@ services:
       - ANTHROPIC_API_KEY_1=${ANTHROPIC_KEY_1}
       - ANTHROPIC_API_KEY_2=${ANTHROPIC_KEY_2}
       - ANTHROPIC_API_KEY_3=${ANTHROPIC_KEY_3}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=6379
     volumes:
       - ./litellm-config.yaml:/app/config.yaml:ro
     expose:

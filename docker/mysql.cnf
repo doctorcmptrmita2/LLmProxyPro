@@ -13,10 +13,10 @@ innodb_flush_method = O_DIRECT
 innodb_file_per_table = 1
 innodb_open_files = 400
 
-# Query cache
-query_cache_type = 1
-query_cache_size = 256M
-query_cache_limit = 2M
+# Query cache (removed in MySQL 8.0)
+# query_cache_type = 1
+# query_cache_size = 256M
+# query_cache_limit = 2M
 
 # Connection settings
 max_connections = 200

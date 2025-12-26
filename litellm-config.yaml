@@ -103,11 +103,11 @@ router_settings:
   fallbacks: []
   redis_host: redis
   redis_port: 6379
-  redis_password: ${REDIS_PASSWORD}
+  redis_password: os.environ/REDIS_PASSWORD
 
 # General settings
 general_settings:
-  master_key: ${LITELLM_API_KEY}
+  master_key: os.environ/LITELLM_API_KEY
   database_url: null
   store_model_in_db: false
   
@@ -133,7 +133,7 @@ rate_limit:
   enabled: true
   redis_host: redis
   redis_port: 6379
-  redis_password: ${REDIS_PASSWORD}
+  redis_password: os.environ/REDIS_PASSWORD
 
 # Security
 security:
