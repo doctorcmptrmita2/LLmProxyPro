@@ -30,8 +30,17 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         opcache \
         intl
 
+# Build araçları (Redis extension için gerekli)
+RUN apk add --no-cache --virtual .build-deps \
+    autoconf \
+    g++ \
+    make
+
 # Redis extension
 RUN pecl install redis && docker-php-ext-enable redis
+
+# Build araçlarını temizle
+RUN apk del .build-deps
 
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
