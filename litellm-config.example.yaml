@@ -1,0 +1,128 @@
+# LiteLLM Proxy Configuration for CodexFlow.dev
+# This file should be used to configure your LiteLLM proxy instance
+
+model_list:
+  # ============================================
+  # FAST POOL: Claude Haiku 4.5 (3 API Keys)
+  # ============================================
+  - model_name: fast
+    litellm_params:
+      model: anthropic/claude-haiku-4-5
+      api_key: os.environ/ANTHROPIC_KEY_1
+      rpm: 40  # Requests per minute
+      tpm: 100000  # Tokens per minute
+    model_info:
+      id: fast-haiku-1
+      mode: chat
+      supports_function_calling: true
+      supports_vision: false
+
+  - model_name: fast
+    litellm_params:
+      model: anthropic/claude-haiku-4-5
+      api_key: os.environ/ANTHROPIC_KEY_2
+      rpm: 40
+      tpm: 100000
+    model_info:
+      id: fast-haiku-2
+      mode: chat
+      supports_function_calling: true
+      supports_vision: false
+
+  - model_name: fast
+    litellm_params:
+      model: anthropic/claude-haiku-4-5
+      api_key: os.environ/ANTHROPIC_KEY_3
+      rpm: 40
+      tpm: 100000
+    model_info:
+      id: fast-haiku-3
+      mode: chat
+      supports_function_calling: true
+      supports_vision: false
+
+  # ============================================
+  # DEEP POOL: Claude Sonnet 4.5 (3 API Keys)
+  # ============================================
+  - model_name: deep
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_KEY_1
+      rpm: 20
+      tpm: 80000
+    model_info:
+      id: deep-sonnet-1
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+
+  - model_name: deep
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_KEY_2
+      rpm: 20
+      tpm: 80000
+    model_info:
+      id: deep-sonnet-2
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+
+  - model_name: deep
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_KEY_3
+      rpm: 20
+      tpm: 80000
+    model_info:
+      id: deep-sonnet-3
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+
+# Router settings
+router_settings:
+  routing_strategy: simple-shuffle  # Load balance across deployments
+  model_group_alias:
+    fast: fast
+    deep: deep
+  num_retries: 2
+  timeout: 120
+  fallbacks: []  # No cross-tier fallbacks
+
+# General settings
+general_settings:
+  master_key: your_litellm_master_key_here  # Set this in production
+  database_url: null  # Optional: for LiteLLM's own logging
+  
+# Logging
+litellm_settings:
+  success_callback: []
+  failure_callback: []
+  service_callback: []
+  cache: false  # We handle caching in Laravel
+  cache_params:
+    type: null
+  set_verbose: false
+  json_logs: true
+
+# Environment variables to set:
+# export ANTHROPIC_KEY_1="sk-ant-..."
+# export ANTHROPIC_KEY_2="sk-ant-..."
+# export ANTHROPIC_KEY_3="sk-ant-..."
+
+# Start LiteLLM proxy:
+# litellm --config litellm-config.yaml --port 4000
+
+# Health check:
+# curl http://localhost:4000/health
+
+# Test endpoint:
+# curl -X POST http://localhost:4000/v1/chat/completions \
+#   -H "Authorization: Bearer your_litellm_master_key_here" \
+#   -H "Content-Type: application/json" \
+#   -d '{
+#     "model": "fast",
+#     "messages": [{"role": "user", "content": "Hello!"}]
+#   }'
+
